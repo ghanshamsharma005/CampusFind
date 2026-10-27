@@ -1,0 +1,630 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusFind | Lost & Found Portal</title>
+<style>
+:root {
+  --navy: #102a43;
+  --teal: #13b8a6;
+  --light: #f4f8fb;
+  --muted: #647789;
+  --border: #e1e9ef;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--light);
+  color: #172b3a;
+  line-height: 1.6;
+}
+.container { width: min(1150px, 92%); margin: auto; }
+header {
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--border);
+}
+nav {
+  min-height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+.logo {
+  color: var(--navy);
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+}
+.logo span { color: var(--teal); }
+nav a:not(.logo) {
+  color: var(--muted);
+  text-decoration: none;
+  margin-left: 20px;
+}
+button, .button {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 17px;
+  background: var(--teal);
+  color: #073b38;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+}
+button:hover, .button:hover { filter: brightness(.96); }
+.hero {
+  background: linear-gradient(120deg, #102a43, #18566b);
+  color: white;
+  padding: 75px 0;
+}
+.hero-content {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  align-items: center;
+  gap: 35px;
+}
+.eyebrow {
+  color: #72e7da;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+h1 {
+  font-size: clamp(38px, 5vw, 62px);
+  line-height: 1.1;
+  margin: 18px 0;
+}
+h1 span { color: #57dfcf; }
+.hero p { color: #d0dce5; font-size: 17px; }
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 25px; }
+.button-outline {
+  background: transparent;
+  border: 1px solid #ffffff66;
+  color: white;
+}
+.hero-illustration {
+  background: #ffffff12;
+  border: 1px solid #ffffff22;
+  border-radius: 28px;
+  padding: 35px 20px;
+  text-align: center;
+}
+.hero-illustration .emoji { font-size: 95px; }
+.hero-illustration h3 { margin-bottom: 5px; }
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-top: 25px;
+}
+.stat, .card, .step {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+}
+.stat strong { display: block; font-size: 24px; color: var(--navy); }
+.stat small { color: var(--muted); }
+section.content { padding: 65px 0; }
+.section-heading { margin-bottom: 25px; }
+.section-heading small {
+  color: #078779;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+h2 { color: var(--navy); font-size: 34px; margin: 7px 0; }
+.section-heading p { color: var(--muted); }
+.toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+input, select, textarea {
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  font: inherit;
+  min-width: 0;
+}
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid #13b8a655;
+  border-color: var(--teal);
+}
+#search { flex: 1; min-width: 200px; }
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.tabs button { background: white; color: var(--muted); border: 1px solid var(--border); }
+.tabs button.active { background: var(--navy); color: white; }
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.item-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.item-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px #102a4312; }
+.item-picture {
+  height: 145px;
+  display: grid;
+  place-items: center;
+  font-size: 60px;
+  background: linear-gradient(135deg, #dff8f3, #c6e8ff);
+  position: relative;
+}
+.item-picture.purple { background: linear-gradient(135deg, #eee5ff, #d9d0ff); }
+.item-picture.yellow { background: linear-gradient(135deg, #fff5d8, #ffe3a3); }
+.item-picture.pink { background: linear-gradient(135deg, #ffe5ef, #ffc9dc); }
+.item-picture.blue { background: linear-gradient(135deg, #e3efff, #c8dcff); }
+.item-picture.green { background: linear-gradient(135deg, #def8ec, #b5ead5); }
+.badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: white;
+  color: #087d72;
+  padding: 5px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: bold;
+}
+.item-details { padding: 17px; }
+.item-details h3 { color: var(--navy); margin: 0 0 8px; }
+.item-details p { color: var(--muted); font-size: 14px; min-height: 44px; }
+.item-meta {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.item-details button { margin-top: 12px; }
+.empty {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 15px;
+  color: var(--muted);
+}
+.how { background: #eaf2f5; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 25px; }
+.step .number {
+  background: var(--navy);
+  color: white;
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: inline-block;
+  font-weight: bold;
+}
+.step h3 { color: var(--navy); }
+.step p { color: var(--muted); font-size: 14px; }
+.cta {
+  background: var(--navy);
+  color: white;
+  border-radius: 20px;
+  padding: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.cta h2 { color: white; }
+.cta p { color: #d0dce5; }
+footer {
+  margin-top: 50px;
+  background: #0b2032;
+  color: #c0ced8;
+  padding: 28px 0;
+}
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+footer a { color: white; text-decoration: none; }
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: #071b2ddd;
+  padding: 18px;
+  overflow-y: auto;
+  align-items: center;
+  justify-content: center;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  width: min(570px, 100%);
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  max-height: 95vh;
+  overflow-y: auto;
+}
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.modal-head h2 { font-size: 25px; }
+.close { background: #edf2f5; color: var(--navy); font-size: 22px; }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+  margin-top: 18px;
+}
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 13px; font-weight: bold; color: var(--navy); }
+.field input, .field select, .field textarea { width: 100%; }
+.field.full { grid-column: 1/-1; }
+.field textarea { min-height: 85px; resize: vertical; }
+.form-note { font-size: 12px; color: var(--muted); }
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+.cancel { background: #edf2f5; color: var(--navy); }
+#toast {
+  position: fixed;
+  z-index: 40;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--navy);
+  color: white;
+  padding: 13px 20px;
+  border-radius: 10px;
+  display: none;
+}
+#toast.show { display: block; }
+@media(max-width: 800px) {
+  .hero-content { grid-template-columns: 1fr; }
+  .hero-illustration { max-width: 420px; margin: auto; width: 100%; }
+  .items-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-links a:not(.logo) { margin-left: 8px; }
+}
+@media(max-width: 560px) {
+  nav { flex-wrap: wrap; padding: 12px 0; }
+  nav a:not(.logo) { display: none; }
+  .hero { padding: 48px 0; }
+  .stats, .items-grid, .steps { grid-template-columns: 1fr; }
+  .stats { gap: 10px; }
+  .section-heading h2, h2 { font-size: 28px; }
+  section.content { padding: 45px 0; }
+  .cta { flex-direction: column; align-items: flex-start; padding: 25px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .field.full { grid-column: auto; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <nav>
+      <a class="logo" href="#home">Campus<span>Find.</span></a>
+      <div class="nav-links">
+        <a href="#browse">Browse Items</a>
+        <a href="#how">How It Works</a>
+        <button onclick="openModal()">+ Report Item</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="home">
+<section class="hero">
+  <div class="container hero-content">
+    <div>
+      <div class="eyebrow">Your campus, connected</div>
+      <h1>Lost something?<br><span>Let's bring it home.</span></h1>
+      <p>A missing ID card, a forgotten water bottle, or a found set of keys. Help your campus community reunite people with the things that matter.</p>
+      <div class="hero-actions">
+        <button onclick="openModal()">+ Report Lost or Found</button>
+        <a class="button button-outline" href="#browse">Explore Listings ↓</a>
+      </div>
+      <p>✓ Student-friendly &nbsp; ✓ Easy to use &nbsp; ✓ Community-powered</p>
+    </div>
+    <div class="hero-illustration">
+      <div class="emoji">🎧</div>
+      <h3>Wireless Headphones</h3>
+      <p>✓ Found near the library</p>
+      <p>One small post. One big relief.</p>
+    </div>
+  </div>
+</section>
+
+<div class="container stats">
+  <div class="stat"><strong id="itemCount">06</strong><small>Demo listings</small></div>
+  <div class="stat"><strong>1 minute</strong><small>To report an item</small></div>
+  <div class="stat"><strong>One campus</strong><small>Stronger together</small></div>
+</div>
+
+<section class="content" id="browse">
+<div class="container">
+  <div class="section-heading">
+    <small>Community listings</small>
+    <h2>Find what you're looking for.</h2>
+    <p>Search recent lost and found reports around campus.</p>
+  </div>
+
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="Search item, location or details..." oninput="renderItems()">
+    <select id="categoryFilter" onchange="renderItems()">
+      <option value="all">All Categories</option>
+      <option>Electronics</option>
+      <option>Accessories</option>
+      <option>Documents</option>
+      <option>Stationery</option>
+      <option>Other</option>
+    </select>
+    <select id="locationFilter" onchange="renderItems()">
+      <option value="all">All Locations</option>
+      <option>Library</option>
+      <option>Cafeteria</option>
+      <option>Sports Complex</option>
+      <option>Lecture Hall</option>
+      <option>Parking Area</option>
+      <option>Other</option>
+    </select>
+  </div>
+
+  <div class="tabs">
+    <button class="active" data-tab="all" onclick="setTab('all',this)">All Items</button>
+    <button data-tab="lost" onclick="setTab('lost',this)">🔎 Lost Items</button>
+    <button data-tab="found" onclick="setTab('found',this)">✓ Found Items</button>
+  </div>
+
+  <div class="items-grid" id="itemsGrid"></div>
+  <p class="form-note">Demo: new listings are saved only in this browser session. A backend is required to share listings between students.</p>
+</div>
+</section>
+
+<section class="content how" id="how">
+<div class="container">
+  <div class="section-heading">
+    <small>Simple and helpful</small>
+    <h2>Three steps. One happy reunion.</h2>
+    <p>CampusFind makes it easy to look out for one another.</p>
+  </div>
+  <div class="steps">
+    <article class="step"><span class="number">01</span><h3>Post a Report</h3><p>Tell the campus what you lost or found. Add the location and details that help identify the item.</p></article>
+    <article class="step"><span class="number">02</span><h3>Search Listings</h3><p>Search recent reports and filter by category or campus location to find a match.</p></article>
+    <article class="step"><span class="number">03</span><h3>Reconnect Safely</h3><p>Coordinate a return and confirm ownership before handing an item over.</p></article>
+  </div>
+</div>
+</section>
+
+<section class="content">
+<div class="container">
+  <div class="cta">
+    <div><h2>Found something that isn't yours?</h2><p>Be someone's campus hero. Help it find its way home.</p></div>
+    <button onclick="openModal()">Report a Found Item →</button>
+  </div>
+</div>
+</section>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <div><strong>CampusFind.</strong><br><small>Made for campus. Powered by kindness.</small></div>
+    <div><a href="#browse">Browse Listings</a> &nbsp; | &nbsp; <a href="#how">How It Works</a></div>
+    <small>© <span id="year"></span> CampusFind</small>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h2 id="modalTitle">Report an Item</h2><p>Every detail helps it find its way home.</p></div>
+      <button class="close" type="button" onclick="closeModal()" aria-label="Close">×</button>
+    </div>
+    <form id="reportForm">
+      <div class="form-grid">
+        <div class="field"><label for="reportType">Report Type *</label><select id="reportType" required><option value="lost">I lost an item</option><option value="found">I found an item</option></select></div>
+        <div class="field"><label for="itemCategory">Category *</label><select id="itemCategory" required><option>Electronics</option><option>Accessories</option><option>Documents</option><option>Stationery</option><option>Other</option></select></div>
+        <div class="field full"><label for="itemName">Item Name *</label><input id="itemName" required maxlength="70" placeholder="e.g. Blue water bottle"></div>
+        <div class="field"><label for="itemLocation">Campus Location *</label><select id="itemLocation" required><option>Library</option><option>Cafeteria</option><option>Sports Complex</option><option>Lecture Hall</option><option>Parking Area</option><option>Other</option></select></div>
+        <div class="field"><label for="itemDate">Date *</label><input id="itemDate" type="date" required></div>
+        <div class="field full"><label for="itemDescription">Description *</label><textarea id="itemDescription" required maxlength="280" placeholder="Colour, brand, distinguishing marks..."></textarea></div>
+        <div class="field"><label for="reporterName">Your Name *</label><input id="reporterName" required maxlength="60" placeholder="Your preferred name"></div>
+        <div class="field"><label for="reporterContact">Contact (Optional)</label><input id="reporterContact" maxlength="100" placeholder="College email or contact"></div>
+      </div>
+      <p class="form-note">Protect your privacy. Do not post passwords or full ID numbers. Arrange item returns in a public campus location.</p>
+      <div class="form-actions">
+        <button type="button" class="cancel" onclick="closeModal()">Cancel</button>
+        <button type="submit">Publish Listing →</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script>
+const demoItems = [
+  {id:1,type:"found",name:"Wireless Headphones",category:"Electronics",location:"Library",date:"2026-10-26",description:"Black over-ear headphones found on a study table near the windows.",reporter:"Aarav",emoji:"🎧",color:"green"},
+  {id:2,type:"lost",name:"Student ID Card",category:"Documents",location:"Cafeteria",date:"2026-10-25",description:"Student ID card in a clear holder. Please contact me if found.",reporter:"Mehak",emoji:"🪪",color:"blue"},
+  {id:3,type:"found",name:"Blue Water Bottle",category:"Other",location:"Sports Complex",date:"2026-10-25",description:"Reusable blue bottle left beside the indoor court benches.",reporter:"Kabir",emoji:"🧴",color:"pink"},
+  {id:4,type:"lost",name:"Data Structures Notebook",category:"Stationery",location:"Lecture Hall",date:"2026-10-24",description:"Dark green notebook with handwritten DS notes.",reporter:"Simran",emoji:"📓",color:"purple"},
+  {id:5,type:"found",name:"Keychain with 3 Keys",category:"Accessories",location:"Parking Area",date:"2026-10-23",description:"Small keyring with three keys found near the bike parking entrance.",reporter:"Rohan",emoji:"🔑",color:"yellow"},
+  {id:6,type:"lost",name:"Silver Wristwatch",category:"Accessories",location:"Library",date:"2026-10-22",description:"Silver-coloured wristwatch possibly left on the second-floor reading desk.",reporter:"Isha",emoji:"⌚",color:"blue"}
+];
+
+let userItems = [];
+let currentTab = "all";
+const icons = {
+  Electronics:"🎧",
+  Accessories:"🔑",
+  Documents:"🪪",
+  Stationery:"📓",
+  Other:"📦"
+};
+
+function getItems() {
+  return [...userItems, ...demoItems];
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;",
+    '"':"&quot;", "'":"&#39;"
+  })[char]);
+}
+
+function formatDate(value) {
+  if (!value) return "Date not specified";
+  return new Date(value + "T12:00:00").toLocaleDateString("en-IN", {
+    day:"numeric", month:"short", year:"numeric"
+  });
+}
+
+function renderItems() {
+  const query = document.getElementById("search").value.trim().toLowerCase();
+  const category = document.getElementById("categoryFilter").value;
+  const location = document.getElementById("locationFilter").value;
+
+  const items = getItems().filter(item =>
+    (currentTab === "all" || item.type === currentTab) &&
+    (category === "all" || item.category === category) &&
+    (location === "all" || item.location === location) &&
+    [item.name,item.description,item.location,item.category,item.reporter]
+      .join(" ").toLowerCase().includes(query)
+  );
+
+  const grid = document.getElementById("itemsGrid");
+
+  if (!items.length) {
+    grid.innerHTML = `<div class="empty">
+      <h3>No matching listings found</h3>
+      Try another search or report the item yourself.
+      <p><button onclick="openModal()">+ Report an Item</button></p>
+    </div>`;
+  } else {
+    grid.innerHTML = items.map(item => `
+      <article class="item-card">
+        <div class="item-picture ${escapeHTML(item.color || "blue")}">
+          <span class="badge">${item.type === "found" ? "✓ Found" : "⌕ Lost"}</span>
+          <span>${escapeHTML(item.emoji || "📦")}</span>
+        </div>
+        <div class="item-details">
+          <h3>${escapeHTML(item.name)}</h3>
+          <p>${escapeHTML(item.description)}</p>
+          <div class="item-meta">
+            📍 ${escapeHTML(item.location)}<br>
+            Category: ${escapeHTML(item.category)}<br>
+            Date: ${escapeHTML(formatDate(item.date))}
+          </div>
+          <small>Posted by ${escapeHTML(item.reporter || "Campus member")}</small><br>
+          <button onclick="viewItem(${Number(item.id)})">View Details ↗</button>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  document.getElementById("itemCount").textContent =
+    String(getItems().length).padStart(2, "0");
+}
+
+function setTab(tab, button) {
+  currentTab = tab;
+  document.querySelectorAll(".tabs button").forEach(btn =>
+    btn.classList.toggle("active", btn === button)
+  );
+  renderItems();
+}
+
+function openModal() {
+  document.getElementById("reportModal").classList.add("open");
+  document.body.style.overflow = "hidden";
+  const date = document.getElementById("itemDate");
+  if (!date.value) date.value = new Date().toISOString().slice(0, 10);
+  document.getElementById("reportType").focus();
+}
+
+function closeModal() {
+  document.getElementById("reportModal").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(() => toast.classList.remove("show"), 3000);
+}
+
+function viewItem(id) {
+  const item = getItems().find(entry => entry.id === id);
+  if (!item) return;
+
+  let message = `${item.name}\n${item.type === "found" ? "Found" : "Lost"} item\n`;
+  message += `Category: ${item.category}\nLocation: ${item.location}\n`;
+  message += `Date: ${formatDate(item.date)}\n\n${item.description}\n`;
+  message += `\nPosted by: ${item.reporter}`;
+  if (item.contact) message += `\nContact: ${item.contact}`;
+  alert(message);
+}
+
+document.getElementById("reportForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const category = document.getElementById("itemCategory").value;
+  const item = {
+    id: Date.now(),
+    type: document.getElementById("reportType").value,
+    category,
+    name: document.getElementById("itemName").value.trim(),
+    location: document.getElementById("itemLocation").value,
+    date: document.getElementById("itemDate").value,
+    description: document.getElementById("itemDescription").value.trim(),
+    reporter: document.getElementById("reporterName").value.trim(),
+    contact: document.getElementById("reporterContact").value.trim(),
+    emoji: icons[category] || "📦",
+    color: ["blue","pink","purple","green","yellow"][
+      Math.floor(Math.random() * 5)
+    ]
+  };
+
+  if (!item.name || !item.description || !item.reporter) {
+    showToast("Please complete all required fields.");
+    return;
+  }
+
+  userItems.unshift(item);
+  this.reset();
+  closeModal();
+  currentTab = "all";
+  document.querySelectorAll(".tabs button").forEach(btn =>
+    btn.classList.toggle("active", btn.dataset.tab === "all")
+  );
+  renderItems();
+  document.getElementById("browse").scrollIntoView({behavior:"smooth"});
+  showToast("Your listing has been added in this browser.");
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") closeModal();
+});
+
+document.getElementById("year").textContent = new Date().getFullYear();
+renderItems();
+</script>
+</body>
+</html>
